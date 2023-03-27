@@ -1,0 +1,19 @@
+{
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "20502052",
+      "id": 1
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "222",
+      "id": 2
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": 3
+    }
+  ]
+}
