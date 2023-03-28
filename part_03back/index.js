@@ -1,7 +1,10 @@
+const cors = require('cors')
 const express = require('express')
 const app = express()
 var morgan = require('morgan')
+app.use(express.static('build'))
 
+app.use(cors())
 
 app.use(express.json())
 
