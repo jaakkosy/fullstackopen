@@ -27,8 +27,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
-
   next(error)
 }
 
@@ -40,7 +41,23 @@ app.use(cors())
 app.use(express.json())
 app.use(requestLogger)
 app.use(express.static('build'))
+
+app.get('/info', (request, response) => {
+
   
+  const showDate = new Date().toLocaleString();
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  Person.find({}).then(people => {
+    response.send(
+      `
+    <div>phonebook has info for ${people.length} people</div>
+    <div>${showDate}</div>
+    <div>${timeZone}</div>
+    `
+    )
+  })
+})
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(people => {
@@ -48,7 +65,8 @@ app.get('/api/persons', (request, response) => {
   })
 })
   
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
+
   const body = request.body
 
   if (body.name === undefined) {
@@ -63,6 +81,7 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => next(error))
 })
   
 app.get('/api/persons/:id', (request, response, next) => {
@@ -94,7 +113,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number,
   }
 
-  Person.findByIdAndUpdate(request, person, { new: true })
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
