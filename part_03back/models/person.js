@@ -20,10 +20,23 @@ const personSchema = new mongoose.Schema({
   },
   number: {
     type: String,
-    minlength: 8
+    minlength: 8,
+    validate: {
+      validator: value => value.at(2) === "-" || value.at(3) === "-",
+      message: props => `${props.value} number must be in correct format!`,
+      validator: value => {
+        let count = 0;
+        for (let i = 0; i < value.length; i++) {
+          if (value[i] === "-") {
+            count++;
+          }
+        }
+        return count === 1;
+      },
+      message: props => `${props.value} number must have "-" character only once!`
+    }
   } 
 })
-
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
