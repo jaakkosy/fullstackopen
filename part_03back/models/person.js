@@ -23,7 +23,7 @@ const personSchema = new mongoose.Schema({
     minlength: 8,
     validate: [
       {
-      validator: value => value.at(2) === "-" || value.at(3) === "-",
+      validator: value => value.charAt(2) === "-" || value.charAt(3) === "-",
       message: props => `${props.value} number must be in correct format!`
       },
       {
