@@ -2,7 +2,7 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-    "title": "Dota2 is very hard to madsterrrrrrrr",
+    "title": "Dota2 is very hasdsasdard to madsterrrrrrrr",
     "author": "Jaakko Syr",
     "url": "https://www.dota2protracker.com/",
     "likes": 200
