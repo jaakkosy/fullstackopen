@@ -82,11 +82,11 @@ const App = () => {
       })
   }, [])
 
-  const updateContact = (name,duplicateIndex,personObject,event) => {
-    if (window.confirm(`${name} is already added in phonebook, replace old number with new one?`)) {
+  const updateContact = (newName,duplicatePerson,personObject,event) => {
+    if (window.confirm(`${newName} is already added in phonebook, replace old number with new one?`)) {
       event.preventDefault()
       personService
-        .update(duplicateIndex+1,personObject)
+        .update(duplicatePerson.id,personObject)
         .then(returnedPerson => {
           personService.getAll().then(initialPersons => {
             setPersons(initialPersons)
@@ -100,7 +100,7 @@ const App = () => {
         })
         .catch(error => {
           console.log(error)
-          setErrorMessage(`Information of ${name} has already been removed from server`)
+          setErrorMessage(`Information of ${newName} has already been removed from server`)
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
@@ -117,10 +117,9 @@ const App = () => {
       }
 
     const duplicatePerson = persons.find(person => person.name === newName)
-    const duplicateIndex = persons.indexOf(duplicatePerson)
 
     if (duplicatePerson != null) {
-    updateContact(newName,duplicateIndex,personObject,event)
+    updateContact(newName,duplicatePerson,personObject,event)
     
     } else {
       event.preventDefault()
@@ -133,6 +132,12 @@ const App = () => {
           setMessage(`added ${returnedPerson.name}`)
           setTimeout(() => {
             setMessage(null)
+          }, 5000)
+        })
+        .catch (error => {
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => {
+            setErrorMessage(null)
           }, 5000)
         })
     }
