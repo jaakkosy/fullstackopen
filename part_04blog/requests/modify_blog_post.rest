@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/642bfdacfed53e72386242eb
+content-type: application/json
+
+{
+    "title": "ModASDASDASTESTT",
+    "author": "Jaakko Syr",
+    "url": "https://www.dota2protracker.com/",
+    "likes": 200
+}

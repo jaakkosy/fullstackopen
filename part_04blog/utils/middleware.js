@@ -1,4 +1,6 @@
 const logger = require('./logger')
+const User = require('../models/user')
+const webtoken = require('jsonwebtoken')
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
@@ -8,24 +10,53 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+const unknownEndPoint = (request, response) => {
+  response.status(404).send({
+    error: 'unknowwn endpoint'
+  })
 }
 
 const errorHandler = (error, request, response, next) => {
-  logger.error(error.message)
-
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  } else if (error.name === 'ValidationError') {
+  if(error.name === 'ValidationError'){
+    return response.status(400).send({ error: error.message })
+  }
+  else if(error.name === 'CastError'){
+    return response.status(400).json({ error: 'malformatted id' })
+  }
+  else if(error.name === 'JsonWebTokenError'){
     return response.status(400).json({ error: error.message })
   }
-
   next(error)
+}
+
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get('Authorization')
+  if(!authorization)
+  {
+    return response.status(401).json({ error: 'Unauthorized' })
+  }
+  else if(authorization && authorization.startsWith('Bearer '))
+  {
+    const token = authorization.replace('Bearer ', '')
+    request.token = token
+  }
+  next()
+}
+
+
+const userExtractor = async (request, response, next) => {
+  const decoded_token = webtoken.verify(request.token, process.env.SECRET)
+  if(!decoded_token.id){
+    return response.status(401).json({ error: 'token invaid' })
+  }
+  const user = await User.findById(decoded_token.id)
+  request.user = user.username
+  next()
 }
 
 module.exports = {
   requestLogger,
-  unknownEndpoint,
-  errorHandler
-}
+  unknownEndPoint,
+  errorHandler,
+  tokenExtractor,
+  userExtractor }

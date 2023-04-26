@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpBQUtLT1MiLCJpZCI6IjY0NDY1OTkyMGE5MmQxYzNjNzJmNjgzMyIsImlhdCI6MTY4MjQ5MDIzMX0.Im81umx0t79-XWDpZj7fv40UzDAyEs_-WQ748SBPMms
 
 {
-    "title": "Dota2 is very hasdsasdard to madsterrrrrrrr",
-    "author": "Jaakko Syr",
     "url": "https://www.dota2protracker.com/",
-    "likes": 200
+    "title": "Void Spirit is nice heroYES!!!!",
+    "author": "JaakkASDF",
+    "likes": 20055
 }
